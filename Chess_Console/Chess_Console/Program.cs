@@ -1,5 +1,6 @@
 ﻿using System;
-using Board;
+using Chess_Console.Board;
+using Chess_Console.Board.Enum;
 
 namespace Chess_Console
 {

@@ -1,19 +1,23 @@
-﻿namespace Board
+﻿namespace Chess_Console.Board
 {
     class Position
     {
-        public int Line { get; set; }
         public int Row { get; set; }
+        public int Column { get; set; }
+
+        public Position()
+        {
+        }
 
         public Position(int line, int row)
         {
-            Line = line;
-            Row = row;
+            Row = line;
+            Column = row;
         }
-        
+
         public override string ToString()
         {
-            return $"{Line}, {Row}";
+            return $"{Row}, {Column}";
         }
     }
 }
