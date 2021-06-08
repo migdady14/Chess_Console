@@ -4,9 +4,9 @@ using Chess_Console.Board.Enum;
 
 namespace Chess_Console.Chess
 {
-    class Pawn : Piece
+    class Rook : Piece
     {
-        public Pawn(Color color, ChessBoard board) : base(color, board)
+        public Rook(Color color, ChessBoard board) : base(color, board)
         {
         }
 
@@ -14,9 +14,9 @@ namespace Chess_Console.Chess
         {
             if (Color == Color.White)
             {
-                return "\u265f";
+                return "\u265c";
             }
-            return "\u2659";
+            return "\u2656";
         }
     }
 }

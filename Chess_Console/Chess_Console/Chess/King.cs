@@ -12,7 +12,11 @@ namespace Chess_Console.Chess
 
         public override string ToString()
         {
-            return "K";
+            if (Color == Color.White)
+            {
+                return "\u265a";
+            }
+            return "\u2654";
         }
     }
 }
