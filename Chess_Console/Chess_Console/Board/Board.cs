@@ -1,21 +1,26 @@
 ﻿
 namespace Chess_Console.Board
 {
-    class Board
+    class ChessBoard
     {
         public int Rows { get; set; }
         public int Columns { get; set; }
-        public Piece[,] pieces;
+        private Piece[,] pieces;
 
-        public Board()
+        public ChessBoard()
         {
         }
 
-        public Board(int rows, int columns)
+        public ChessBoard(int rows, int columns)
         {
             Rows = rows;
             Columns = columns;
             pieces = new Piece[Rows, Columns];
+        }
+
+        public Piece Piece(int row, int column)
+        {
+            return pieces[row, column];
         }
     }
 }
