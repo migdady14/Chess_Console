@@ -12,7 +12,7 @@ namespace Chess_Console.Chess
 
         public override string ToString()
         {
-            return "K";
+            return "N";
         }
     }
 }
