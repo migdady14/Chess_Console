@@ -2,7 +2,7 @@
 
 namespace Chess_Console.Board
 {
-    class Piece
+    abstract class Piece
     {
         public Position Position { get; set; }
         public Color Color { get; protected set; }
@@ -13,9 +13,9 @@ namespace Chess_Console.Board
         {
         }
 
-        public Piece(Position position, Color color, ChessBoard board)
+        public Piece(Color color, ChessBoard board)
         {
-            Position = position;
+            Position = null;
             Color = color;
             Board = board;
             MoveCount = 0;

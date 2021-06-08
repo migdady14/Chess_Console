@@ -22,5 +22,11 @@ namespace Chess_Console.Board
         {
             return pieces[row, column];
         }
+
+        public void insertPiece(Piece p, Position pos)
+        {
+            pieces[pos.Row, pos.Column] = p;
+            p.Position = pos;
+        }
     }
 }
