@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Chess_Console.Board.Enum;
 using Chess_Console.Board;
 using Chess_Console.Chess;
 
@@ -60,6 +62,62 @@ namespace Chess_Console
             {
                 Console.Write($"[{piece}] ");
             }
+        }
+
+        public void PrintMatch(ChessMatch match)
+        {
+            Console.Clear();
+            PrintBoard(match.ChessBoard);
+            Console.WriteLine();
+            PrintCapturedPieces(match);
+            Console.WriteLine();
+            Console.WriteLine("Turn: " + match.Turn);
+            Console.WriteLine("Waiting movement from player: " + match.TurnsPlayer);
+
+            Console.WriteLine();
+            Console.Write("Start position: ");
+            Position start = ReadChessPosition().ToPosition();
+            match.ValidateStartPosition(start);
+
+            bool[,] possiblePositions = match.ChessBoard.Piece(start).AvailableMoves();
+
+            Console.Clear();
+            PrintBoard(match.ChessBoard, possiblePositions);
+            Console.WriteLine();
+            PrintCapturedPieces(match);
+            Console.WriteLine();
+            Console.WriteLine("Turn: " + match.Turn);
+            Console.WriteLine("Waiting movement from player: " + match.TurnsPlayer);
+
+
+            Console.WriteLine();
+            Console.Write("End position: ");
+            Position end = ReadChessPosition().ToPosition();
+            match.ValidateEndPosition(start, end);
+
+            match.PlayTurn(start, end);
+        }
+
+        public void PrintCapturedPieces(ChessMatch match)
+        {
+            Console.WriteLine("Captured:");
+            Console.Write("White pieces: ");
+            PrintPieceSet(match.GetCapturedPieces(Color.White));
+            Console.WriteLine();
+            Console.WriteLine("Captured:");
+            Console.Write("Black pieces: ");
+            PrintPieceSet(match.GetCapturedPieces(Color.Black));
+        }
+
+        public void PrintPieceSet(HashSet<Piece> p)
+        {
+            Console.Write("[");
+            foreach (Piece x in p)
+            {
+                Console.Write(x + " ");
+            }
+            Console.Write("]");
+            Console.WriteLine();
         }
 
         public static ChessPosition ReadChessPosition()

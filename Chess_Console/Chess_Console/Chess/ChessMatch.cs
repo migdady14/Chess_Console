@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using Chess_Console.Board;
 using Chess_Console.Board.Enum;
 using Chess_Console.Board.Exceptions;
@@ -11,6 +11,8 @@ namespace Chess_Console.Chess
         public int Turn { get; private set; }
         public Color TurnsPlayer { get; private set; }
         public bool Finished { get; private set; }
+        public HashSet<Piece> Pieces { get; private set; }
+        public HashSet<Piece> CapturedPieces { get; private set; }
 
         public ChessMatch()
         {
@@ -18,6 +20,8 @@ namespace Chess_Console.Chess
             Turn = 1;
             TurnsPlayer = Color.White;
             Finished = false;
+            Pieces = new HashSet<Piece>();
+            CapturedPieces = new HashSet<Piece>();
             StartGamePositioning();
         }
 
@@ -27,6 +31,10 @@ namespace Chess_Console.Chess
             p.IncreaseMoveCount();
             Piece capturedPiece = ChessBoard.RemovePiece(end);
             ChessBoard.InsertPiece(p, end);
+            if (capturedPiece != null)
+            {
+                CapturedPieces.Add(capturedPiece);
+            }
         }
 
         public void PlayTurn(Position start, Position end)
@@ -72,41 +80,74 @@ namespace Chess_Console.Chess
             }
         }
 
+        public HashSet<Piece> GetCapturedPieces(Color color)
+        {
+            HashSet<Piece> aux = new HashSet<Piece>();
+            foreach (Piece x in CapturedPieces)
+            {
+                if (x.Color == color)
+                {
+                    aux.Add(x);
+                }
+            }
+            return aux;
+        }
+
+        public HashSet<Piece> GetPieces(Color color)
+        {
+            HashSet<Piece> aux = new HashSet<Piece>();
+            foreach (Piece x in Pieces)
+            {
+                if (x.Color == color)
+                {
+                    aux.Add(x);
+                }
+            }
+            aux.ExceptWith(GetCapturedPieces(color));
+            return aux;
+        }
+
+        public void InsertNewPiece(char column, int row, Piece piece)
+        {
+            ChessBoard.InsertPiece(piece, new ChessPosition(column, row).ToPosition());
+            Pieces.Add(piece);
+        }
+
         private void StartGamePositioning()
         {
-            ChessBoard.InsertPiece(new King(Color.Black, ChessBoard), new ChessPosition('e', 8).ToPosition());
-            ChessBoard.InsertPiece(new Queen(Color.Black, ChessBoard), new ChessPosition('d', 8).ToPosition());
-            ChessBoard.InsertPiece(new Bishop(Color.Black, ChessBoard), new ChessPosition('c', 8).ToPosition());
-            ChessBoard.InsertPiece(new Bishop(Color.Black, ChessBoard), new ChessPosition('f', 8).ToPosition());
-            ChessBoard.InsertPiece(new Knight(Color.Black, ChessBoard), new ChessPosition('b', 8).ToPosition());
-            ChessBoard.InsertPiece(new Knight(Color.Black, ChessBoard), new ChessPosition('g', 8).ToPosition());
-            ChessBoard.InsertPiece(new Rook(Color.Black, ChessBoard), new ChessPosition('a', 8).ToPosition());
-            ChessBoard.InsertPiece(new Rook(Color.Black, ChessBoard), new ChessPosition('h', 8).ToPosition());
-            ChessBoard.InsertPiece(new Pawn(Color.Black, ChessBoard), new ChessPosition('a', 7).ToPosition());
-            ChessBoard.InsertPiece(new Pawn(Color.Black, ChessBoard), new ChessPosition('b', 7).ToPosition());
-            ChessBoard.InsertPiece(new Pawn(Color.Black, ChessBoard), new ChessPosition('c', 7).ToPosition());
-            ChessBoard.InsertPiece(new Pawn(Color.Black, ChessBoard), new ChessPosition('d', 7).ToPosition());
-            ChessBoard.InsertPiece(new Pawn(Color.Black, ChessBoard), new ChessPosition('e', 7).ToPosition());
-            ChessBoard.InsertPiece(new Pawn(Color.Black, ChessBoard), new ChessPosition('f', 7).ToPosition());
-            ChessBoard.InsertPiece(new Pawn(Color.Black, ChessBoard), new ChessPosition('g', 7).ToPosition());
-            ChessBoard.InsertPiece(new Pawn(Color.Black, ChessBoard), new ChessPosition('h', 7).ToPosition());
+            InsertNewPiece('e', 8, new King(Color.Black, ChessBoard));
+            InsertNewPiece('d', 8, new Queen(Color.Black, ChessBoard));
+            InsertNewPiece('c', 8, new Bishop(Color.Black, ChessBoard));
+            InsertNewPiece('f', 8, new Bishop(Color.Black, ChessBoard));
+            InsertNewPiece('b', 8, new Knight(Color.Black, ChessBoard));
+            InsertNewPiece('g', 8, new Knight(Color.Black, ChessBoard));
+            InsertNewPiece('a', 8, new Rook(Color.Black, ChessBoard));
+            InsertNewPiece('h', 8, new Rook(Color.Black, ChessBoard));
+            InsertNewPiece('a', 7, new Pawn(Color.Black, ChessBoard));
+            InsertNewPiece('b', 7, new Pawn(Color.Black, ChessBoard));
+            InsertNewPiece('c', 7, new Pawn(Color.Black, ChessBoard));
+            InsertNewPiece('d', 7, new Pawn(Color.Black, ChessBoard));
+            InsertNewPiece('e', 7, new Pawn(Color.Black, ChessBoard));
+            InsertNewPiece('f', 7, new Pawn(Color.Black, ChessBoard));
+            InsertNewPiece('g', 7, new Pawn(Color.Black, ChessBoard));
+            InsertNewPiece('h', 7, new Pawn(Color.Black, ChessBoard));
 
-            ChessBoard.InsertPiece(new King(Color.White, ChessBoard), new ChessPosition('e', 1).ToPosition());
-            ChessBoard.InsertPiece(new Queen(Color.White, ChessBoard), new ChessPosition('d', 1).ToPosition());
-            ChessBoard.InsertPiece(new Bishop(Color.White, ChessBoard), new ChessPosition('c', 1).ToPosition());
-            ChessBoard.InsertPiece(new Bishop(Color.White, ChessBoard), new ChessPosition('f', 1).ToPosition());
-            ChessBoard.InsertPiece(new Knight(Color.White, ChessBoard), new ChessPosition('b', 1).ToPosition());
-            ChessBoard.InsertPiece(new Knight(Color.White, ChessBoard), new ChessPosition('g', 1).ToPosition());
-            ChessBoard.InsertPiece(new Rook(Color.White, ChessBoard), new ChessPosition('a', 1).ToPosition());
-            ChessBoard.InsertPiece(new Rook(Color.White, ChessBoard), new ChessPosition('h', 1).ToPosition());
-            ChessBoard.InsertPiece(new Pawn(Color.White, ChessBoard), new ChessPosition('a', 2).ToPosition());
-            ChessBoard.InsertPiece(new Pawn(Color.White, ChessBoard), new ChessPosition('b', 2).ToPosition());
-            ChessBoard.InsertPiece(new Pawn(Color.White, ChessBoard), new ChessPosition('c', 2).ToPosition());
-            ChessBoard.InsertPiece(new Pawn(Color.White, ChessBoard), new ChessPosition('d', 2).ToPosition());
-            ChessBoard.InsertPiece(new Pawn(Color.White, ChessBoard), new ChessPosition('e', 2).ToPosition());
-            ChessBoard.InsertPiece(new Pawn(Color.White, ChessBoard), new ChessPosition('f', 2).ToPosition());
-            ChessBoard.InsertPiece(new Pawn(Color.White, ChessBoard), new ChessPosition('g', 2).ToPosition());
-            ChessBoard.InsertPiece(new Pawn(Color.White, ChessBoard), new ChessPosition('h', 2).ToPosition());
+            InsertNewPiece('e', 1, new King(Color.White, ChessBoard));
+            InsertNewPiece('d', 1, new Queen(Color.White, ChessBoard));
+            InsertNewPiece('c', 1, new Bishop(Color.White, ChessBoard));
+            InsertNewPiece('f', 1, new Bishop(Color.White, ChessBoard));
+            InsertNewPiece('b', 1, new Knight(Color.White, ChessBoard));
+            InsertNewPiece('g', 1, new Knight(Color.White, ChessBoard));
+            InsertNewPiece('a', 1, new Rook(Color.White, ChessBoard));
+            InsertNewPiece('h', 1, new Rook(Color.White, ChessBoard));
+            InsertNewPiece('a', 2, new Pawn(Color.White, ChessBoard));
+            InsertNewPiece('b', 2, new Pawn(Color.White, ChessBoard));
+            InsertNewPiece('c', 2, new Pawn(Color.White, ChessBoard));
+            InsertNewPiece('d', 2, new Pawn(Color.White, ChessBoard));
+            InsertNewPiece('e', 2, new Pawn(Color.White, ChessBoard));
+            InsertNewPiece('f', 2, new Pawn(Color.White, ChessBoard));
+            InsertNewPiece('g', 2, new Pawn(Color.White, ChessBoard));
+            InsertNewPiece('h', 2, new Pawn(Color.White, ChessBoard));
         }
     }
 }

@@ -14,37 +14,13 @@ namespace Chess_Console
             {
                 Console.OutputEncoding = System.Text.Encoding.Unicode;
                 ChessMatch match = new ChessMatch();
+                Screen screen = new Screen();
 
                 while (!match.Finished)
                 {
                     try
                     {
-                        Console.Clear();
-                        Screen.PrintBoard(match.ChessBoard);
-                        Console.WriteLine();
-                        Console.WriteLine("Turn: " + match.Turn);
-                        Console.WriteLine("Waiting movement from player: " + match.TurnsPlayer);
-
-                        Console.WriteLine();
-                        Console.Write("Start position: ");
-                        Position start = Screen.ReadChessPosition().ToPosition();
-                        match.ValidateStartPosition(start);
-
-                        bool[,] possiblePositions = match.ChessBoard.Piece(start).AvailableMoves();
-
-                        Console.Clear();
-                        Screen.PrintBoard(match.ChessBoard, possiblePositions);
-                        Console.WriteLine();
-                        Console.WriteLine("Turn: " + match.Turn);
-                        Console.WriteLine("Waiting movement from player: " + match.TurnsPlayer);
-
-
-                        Console.WriteLine();
-                        Console.Write("End position: ");
-                        Position end = Screen.ReadChessPosition().ToPosition();
-                        match.ValidateEndPosition(start, end);
-
-                        match.PlayTurn(start, end);
+                        screen.PrintMatch(match);
                     }
                     catch (BoardException e)
                     {
