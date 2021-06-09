@@ -9,10 +9,10 @@
         {
         }
 
-        public Position(int line, int row)
+        public Position(int column, int row)
         {
-            Row = line;
-            Column = row;
+            Row = row;
+            Column = column;
         }
 
         public override string ToString()

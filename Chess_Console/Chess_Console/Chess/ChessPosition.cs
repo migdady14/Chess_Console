@@ -11,7 +11,7 @@ namespace Chess_Console.Chess
         {
         }
 
-        public ChessPosition(int row, char column)
+        public ChessPosition(char column, int row)
         {
             Row = row;
             Column = column;
@@ -19,7 +19,7 @@ namespace Chess_Console.Chess
 
         public Position ToPosition()
         {
-            return new Position(8 - Row, Column - 'a');
+            return new Position(Column - 'a', 8 - Row);
         }
 
         public override string ToString()

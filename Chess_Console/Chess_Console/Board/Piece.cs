@@ -20,5 +20,10 @@ namespace Chess_Console.Board
             Board = board;
             MoveCount = 0;
         }
+
+        public void IncreaseMoveCount()
+        {
+            MoveCount++;
+        }
     }
 }

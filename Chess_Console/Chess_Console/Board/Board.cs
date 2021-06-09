@@ -43,6 +43,15 @@ namespace Chess_Console.Board
             p.Position = pos;
         }
 
+        public Piece RemovePiece(Position pos)
+        {
+            if (Piece(pos) == null) { return null; }
+            Piece p = Piece(pos);
+            p.Position = null;
+            pieces[pos.Row, pos.Column] = null;
+            return p;
+        }
+
         public bool ValidPosition(Position pos)
         {
             if (pos.Row < 0 || pos.Row >= Rows || pos.Column < 0 || pos.Column >= Columns)

@@ -1,5 +1,6 @@
 ﻿using System;
 using Chess_Console.Board;
+using Chess_Console.Chess;
 
 namespace Chess_Console
 {
@@ -26,6 +27,14 @@ namespace Chess_Console
             }
             Console.WriteLine();
             Console.WriteLine("     (A) (B) (C) (D) (E) (F) (G) (H)");
+        }
+
+        public static ChessPosition ReadChessPosition()
+        {
+            string s = Console.ReadLine();
+            char column = s[0];
+            int row = int.Parse(s[1] + "");
+            return new ChessPosition(column, row);
         }
     }
 }
