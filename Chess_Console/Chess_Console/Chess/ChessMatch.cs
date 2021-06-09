@@ -1,6 +1,7 @@
 ﻿using System;
 using Chess_Console.Board;
 using Chess_Console.Board.Enum;
+using Chess_Console.Board.Exceptions;
 
 namespace Chess_Console.Chess
 {
@@ -26,6 +27,49 @@ namespace Chess_Console.Chess
             p.IncreaseMoveCount();
             Piece capturedPiece = ChessBoard.RemovePiece(end);
             ChessBoard.InsertPiece(p, end);
+        }
+
+        public void PlayTurn(Position start, Position end)
+        {
+            Move(start, end);
+            Turn++;
+            SwitchPlayer();
+        }
+
+        public void ValidateStartPosition(Position pos)
+        {
+            if (ChessBoard.Piece(pos) == null)
+            {
+                throw new BoardException("Piece not found. Press ENTER to continue");
+            }
+            if (TurnsPlayer != ChessBoard.Piece(pos).Color)
+            {
+                throw new BoardException("Please, choose a piece that belongs to you. Press ENTER to continue");
+            }
+            if (!ChessBoard.Piece(pos).VerifyMovement())
+            {
+                throw new BoardException("There's no available movement for this piece. Press ENTER to continue");
+            }
+        }
+
+        public void ValidateEndPosition(Position start, Position end)
+        {
+            if (!ChessBoard.Piece(start).CanMoveTo(end))
+            {
+                throw new BoardException("Invalid movement. Press ENTER to continue");
+            }
+        }
+
+        private void SwitchPlayer()
+        {
+            if (TurnsPlayer.Equals(Color.White))
+            {
+                TurnsPlayer = Color.Black;
+            }
+            else
+            {
+                TurnsPlayer = Color.White;
+            }
         }
 
         private void StartGamePositioning()

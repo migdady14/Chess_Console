@@ -28,10 +28,31 @@ namespace Chess_Console.Board
 
         public abstract bool[,] AvailableMoves();
 
+        public bool VerifyMovement()
+        {
+            bool[,] mat = AvailableMoves();
+            for (int i = 0; i < Board.Rows; i++)
+            {
+                for (int j = 0; j < Board.Columns; j++)
+                {
+                    if (mat[i, j])
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         protected bool CanMove(Position pos)
         {
             Piece p = Board.Piece(pos);
             return p == null || p.Color != this.Color;
+        }
+
+        public bool CanMoveTo(Position pos)
+        {
+            return AvailableMoves()[pos.Column, pos.Row];
         }
 
     }
