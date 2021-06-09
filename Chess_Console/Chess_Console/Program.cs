@@ -23,6 +23,13 @@ namespace Chess_Console
                     Console.WriteLine();
                     Console.Write("Start position: ");
                     Position start = Screen.ReadChessPosition().ToPosition();
+
+                    bool[,] possiblePositions = match.ChessBoard.Piece(start).AvailableMoves();
+
+                    Console.Clear();
+                    Screen.PrintBoard(match.ChessBoard, possiblePositions);
+
+                    Console.WriteLine();
                     Console.Write("End position: ");
                     Position end = Screen.ReadChessPosition().ToPosition();
 

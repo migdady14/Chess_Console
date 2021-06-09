@@ -15,6 +15,12 @@
             Column = column;
         }
 
+        public void SetValues(int column, int row)
+        {
+            Row = row;
+            Column = column;
+        }
+
         public override string ToString()
         {
             return $"{Row}, {Column}";

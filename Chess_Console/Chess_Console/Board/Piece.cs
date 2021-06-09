@@ -25,5 +25,14 @@ namespace Chess_Console.Board
         {
             MoveCount++;
         }
+
+        public abstract bool[,] AvailableMoves();
+
+        protected bool CanMove(Position pos)
+        {
+            Piece p = Board.Piece(pos);
+            return p == null || p.Color != this.Color;
+        }
+
     }
 }
