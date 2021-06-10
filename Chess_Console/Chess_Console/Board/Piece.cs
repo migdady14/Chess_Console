@@ -26,6 +26,11 @@ namespace Chess_Console.Board
             MoveCount++;
         }
 
+        public void DecreaseMoveCount()
+        {
+            MoveCount--;
+        }
+
         public abstract bool[,] AvailableMoves();
 
         public bool VerifyMovement()

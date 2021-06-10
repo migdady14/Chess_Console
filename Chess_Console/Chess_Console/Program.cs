@@ -28,7 +28,8 @@ namespace Chess_Console
                         Console.ReadLine();
                     }
                 }
-
+                Console.WriteLine();
+                Console.WriteLine($"!!!!!!!!!!PLAYER {match.Enemy(match.TurnsPlayer).ToString().ToUpper()} WINS!!!!!!!!!!");
             }
             catch (BoardException e)
             {

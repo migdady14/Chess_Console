@@ -73,6 +73,11 @@ namespace Chess_Console
             Console.WriteLine();
             Console.WriteLine("Turn: " + match.Turn);
             Console.WriteLine("Waiting movement from player: " + match.TurnsPlayer);
+            if (match.Check)
+            {
+                Console.WriteLine();
+                Console.WriteLine("!!!YOU ARE IN CHECK!!!");
+            }
 
             Console.WriteLine();
             Console.Write("Start position: ");

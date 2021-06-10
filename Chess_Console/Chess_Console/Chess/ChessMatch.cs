@@ -13,6 +13,7 @@ namespace Chess_Console.Chess
         public bool Finished { get; private set; }
         public HashSet<Piece> Pieces { get; private set; }
         public HashSet<Piece> CapturedPieces { get; private set; }
+        public bool Check { get; private set; }
 
         public ChessMatch()
         {
@@ -22,10 +23,11 @@ namespace Chess_Console.Chess
             Finished = false;
             Pieces = new HashSet<Piece>();
             CapturedPieces = new HashSet<Piece>();
+            Check = false;
             StartGamePositioning();
         }
 
-        public void Move(Position start, Position end)
+        public Piece Move(Position start, Position end)
         {
             Piece p = ChessBoard.RemovePiece(start);
             p.IncreaseMoveCount();
@@ -35,13 +37,49 @@ namespace Chess_Console.Chess
             {
                 CapturedPieces.Add(capturedPiece);
             }
+            return capturedPiece;
+        }
+
+        public void UndoMove(Position start, Position end, Piece cPiece)
+        {
+            Piece p = ChessBoard.RemovePiece(end);
+            p.DecreaseMoveCount();
+            if (cPiece != null)
+            {
+                ChessBoard.InsertPiece(cPiece, end);
+                CapturedPieces.Remove(cPiece);
+            }
+            ChessBoard.InsertPiece(p, start);
         }
 
         public void PlayTurn(Position start, Position end)
         {
-            Move(start, end);
-            Turn++;
-            SwitchPlayer();
+            Piece capturedPiece = Move(start, end);
+
+            if (InCheck(TurnsPlayer))
+            {
+                UndoMove(start, end, capturedPiece);
+                throw new BoardException("You can't put yourself in check. Press ENTER to continue");
+            }
+
+            if (InCheck(Enemy(TurnsPlayer)))
+            {
+                Check = true;
+            }
+            else
+            {
+                Check = false;
+            }
+
+            if (CheckMate(TurnsPlayer))
+            {
+                Finished = true;
+            }
+            else
+            {
+                Turn++;
+                SwitchPlayer();
+            }
         }
 
         public void ValidateStartPosition(Position pos)
@@ -93,7 +131,7 @@ namespace Chess_Console.Chess
             return aux;
         }
 
-        public HashSet<Piece> GetPieces(Color color)
+        public HashSet<Piece> GetInGamePieces(Color color)
         {
             HashSet<Piece> aux = new HashSet<Piece>();
             foreach (Piece x in Pieces)
@@ -105,6 +143,79 @@ namespace Chess_Console.Chess
             }
             aux.ExceptWith(GetCapturedPieces(color));
             return aux;
+        }
+
+        private Piece King(Color color)
+        {
+            foreach (Piece x in GetInGamePieces(color))
+            {
+                if (x is King)
+                {
+                    return x;
+                }
+            }
+            return null;
+        }
+
+        public Color Enemy(Color color)
+        {
+            if (color == Color.White)
+            {
+                return Color.Black;
+            }
+            else
+            {
+                return Color.White;
+            }
+        }
+
+        public bool InCheck(Color color)
+        {
+            Piece king = King(color);
+            if (king == null)
+            {
+                throw new BoardException("Ther's no king in your game!");
+            }
+            foreach (Piece x in GetInGamePieces(Enemy(color)))
+            {
+                bool[,] mat = x.AvailableMoves();
+                if (mat[king.Position.Column, king.Position.Row])
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool CheckMate(Color color)
+        {
+            if (!InCheck(color))
+            {
+                return false;
+            }
+            foreach (Piece x in GetInGamePieces(color))
+            {
+                bool[,] mat = x.AvailableMoves();
+                for (int i = 0; i < ChessBoard.Rows; i++)
+                {
+                    for (int j = 0; j < ChessBoard.Columns; j++)
+                    {
+                        if (mat[j, i])
+                        {
+                            Position start = x.Position;
+                            Position end = new Position(j, i);
+                            Piece capPiece = Move(x.Position, end);
+                            bool check = InCheck(color);
+                            UndoMove(start, end, capPiece);
+                            if (!check)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
         }
 
         public void InsertNewPiece(char column, int row, Piece piece)
