@@ -37,6 +37,26 @@ namespace Chess_Console.Chess
             {
                 CapturedPieces.Add(capturedPiece);
             }
+
+            // #SpecialMove Castling
+            if (p is King && end.Column == start.Column + 2)
+            {
+                Position rookStart = new Position(start.Column + 3, start.Row);
+                Position rookEnd = new Position(start.Column + 1, start.Row);
+                Piece R = ChessBoard.RemovePiece(rookStart);
+                R.IncreaseMoveCount();
+                ChessBoard.InsertPiece(R, rookEnd);
+            }
+            if (p is King && end.Column == start.Column - 2)
+            {
+                Position rookStart = new Position(start.Column - 4, start.Row);
+                Position rookEnd = new Position(start.Column - 1, start.Row);
+                Piece R = ChessBoard.RemovePiece(rookStart);
+                R.IncreaseMoveCount();
+                ChessBoard.InsertPiece(R, rookEnd);
+            }
+
+
             return capturedPiece;
         }
 
@@ -50,6 +70,24 @@ namespace Chess_Console.Chess
                 CapturedPieces.Remove(cPiece);
             }
             ChessBoard.InsertPiece(p, start);
+
+            // #SpecialMove Castling
+            if (p is King && end.Column == start.Column + 2)
+            {
+                Position rookStart = new Position(start.Column + 3, start.Row);
+                Position rookEnd = new Position(start.Column + 1, start.Row);
+                Piece R = ChessBoard.RemovePiece(rookEnd);
+                R.DecreaseMoveCount();
+                ChessBoard.InsertPiece(R, rookStart);
+            }
+            if (p is King && end.Column == start.Column - 2)
+            {
+                Position rookStart = new Position(start.Column - 4, start.Row);
+                Position rookEnd = new Position(start.Column - 1, start.Row);
+                Piece R = ChessBoard.RemovePiece(rookEnd);
+                R.DecreaseMoveCount();
+                ChessBoard.InsertPiece(R, rookStart);
+            }
         }
 
         public void PlayTurn(Position start, Position end)
@@ -226,7 +264,7 @@ namespace Chess_Console.Chess
 
         private void StartGamePositioning()
         {
-            InsertNewPiece('e', 8, new King(Color.Black, ChessBoard));
+            InsertNewPiece('e', 8, new King(Color.Black, ChessBoard, this));
             InsertNewPiece('d', 8, new Queen(Color.Black, ChessBoard));
             InsertNewPiece('c', 8, new Bishop(Color.Black, ChessBoard));
             InsertNewPiece('f', 8, new Bishop(Color.Black, ChessBoard));
@@ -243,7 +281,7 @@ namespace Chess_Console.Chess
             InsertNewPiece('g', 7, new Pawn(Color.Black, ChessBoard));
             InsertNewPiece('h', 7, new Pawn(Color.Black, ChessBoard));
 
-            InsertNewPiece('e', 1, new King(Color.White, ChessBoard));
+            InsertNewPiece('e', 1, new King(Color.White, ChessBoard, this));
             InsertNewPiece('d', 1, new Queen(Color.White, ChessBoard));
             InsertNewPiece('c', 1, new Bishop(Color.White, ChessBoard));
             InsertNewPiece('f', 1, new Bishop(Color.White, ChessBoard));

@@ -46,6 +46,12 @@ namespace Chess_Console.Chess
                     {
                         mat[pos.Column, pos.Row] = true;
                     }
+                    // En passant.
+                    pos.SetValues(Position.Column, Position.Row + 2);
+                    if (Board.ValidPosition(pos) && CanMoveForward(pos) && MoveCount == 0)
+                    {
+                        mat[pos.Column, pos.Row] = true;
+                    }
                     // Southeast.
                     pos.SetValues(Position.Column + 1, Position.Row + 1);
                     if (Board.ValidPosition(pos) && CanMoveDiagonal(pos))
@@ -63,6 +69,12 @@ namespace Chess_Console.Chess
                     // North.
                     pos.SetValues(Position.Column, Position.Row - 1);
                     if (Board.ValidPosition(pos) && CanMoveForward(pos))
+                    {
+                        mat[pos.Column, pos.Row] = true;
+                    }
+                    // En passant.
+                    pos.SetValues(Position.Column, Position.Row - 2);
+                    if (Board.ValidPosition(pos) && CanMoveForward(pos) && MoveCount == 0)
                     {
                         mat[pos.Column, pos.Row] = true;
                     }
