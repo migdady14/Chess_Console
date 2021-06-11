@@ -134,6 +134,13 @@ namespace Chess_Console
             Console.WriteLine();
         }
 
+        public char PrintPromotion()
+        {
+            Console.WriteLine("How would you like to promote your pawn?");
+            Console.Write("q = Queen; r = Rook, b = Bishop, k = Knight: ");
+            return char.Parse(Console.ReadLine());
+        }
+
         public static ChessPosition ReadChessPosition()
         {
             string s = Console.ReadLine();

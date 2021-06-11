@@ -2,6 +2,7 @@
 using Chess_Console.Board;
 using Chess_Console.Board.Enum;
 using Chess_Console.Board.Exceptions;
+using Chess_Console;
 
 namespace Chess_Console.Chess
 {
@@ -139,6 +140,46 @@ namespace Chess_Console.Chess
                 throw new BoardException("You can't put yourself in check. Press ENTER to continue");
             }
 
+            Piece p = ChessBoard.Piece(end);
+
+            // #SpecialMove Pawn Promotion
+            if (p is Pawn)
+            {
+                if ((p.Color == Color.White && end.Row == 0) || (p.Color == Color.Black && end.Row == 7))
+                {
+                    Screen sc = new Screen();
+                    p = ChessBoard.RemovePiece(end);
+                    Pieces.Remove(p);
+                    char c = sc.PrintPromotion();
+                    switch (c)
+                    {
+                        case 'q':
+                            Piece queen = new Queen(p.Color, ChessBoard);
+                            ChessBoard.InsertPiece(queen, end);
+                            Pieces.Add(queen);
+                            break;
+                        case 'r':
+                            Piece rook = new Rook(p.Color, ChessBoard);
+                            ChessBoard.InsertPiece(rook, end);
+                            Pieces.Add(rook);
+                            break;
+                        case 'b':
+                            Piece bishop = new Bishop(p.Color, ChessBoard);
+                            ChessBoard.InsertPiece(bishop, end);
+                            Pieces.Add(bishop);
+                            break;
+                        case 'k':
+                            Piece knight = new Knight(p.Color, ChessBoard);
+                            ChessBoard.InsertPiece(knight, end);
+                            Pieces.Add(knight);
+                            break;
+                        default:
+                            throw new BoardException("Please choose a option listed above. Press ENTER to continue");
+                    }
+                }
+            }
+
+
             if (InCheck(Enemy(TurnsPlayer)))
             {
                 Check = true;
@@ -157,8 +198,6 @@ namespace Chess_Console.Chess
                 Turn++;
                 SwitchPlayer();
             }
-
-            Piece p = ChessBoard.Piece(end);
 
             // #SpecialMove En Passant
             if (p is Pawn && (end.Row == start.Row - 2 || end.Row == start.Row + 2))
