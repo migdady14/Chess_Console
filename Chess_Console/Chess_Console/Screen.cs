@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Chess_Console.Board.Enum;
+using Chess_Console.Board.Exceptions;
 using Chess_Console.Board;
 using Chess_Console.Chess;
 
@@ -82,6 +83,10 @@ namespace Chess_Console
             Console.WriteLine();
             Console.Write("Start position: ");
             Position start = ReadChessPosition().ToPosition();
+            if (start == null)
+            {
+                throw new BoardException("Please make a valid movement (eg: A1). Press ENTER to continue");
+            }
             match.ValidateStartPosition(start);
 
             bool[,] possiblePositions = match.ChessBoard.Piece(start).AvailableMoves();
@@ -98,6 +103,10 @@ namespace Chess_Console
             Console.WriteLine();
             Console.Write("End position: ");
             Position end = ReadChessPosition().ToPosition();
+            if (end == null)
+            {
+                throw new BoardException("Please make a valid movement (eg: A1). Press ENTER to continue");
+            }
             match.ValidateEndPosition(start, end);
 
             match.PlayTurn(start, end);

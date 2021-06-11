@@ -6,8 +6,11 @@ namespace Chess_Console.Chess
 {
     class Pawn : Piece
     {
-        public Pawn(Color color, ChessBoard board) : base(color, board)
+        public ChessMatch Match { get; set; }
+
+        public Pawn(Color color, ChessBoard board, ChessMatch match) : base(color, board)
         {
+            Match = match;
         }
 
         public override string ToString()
@@ -37,63 +40,98 @@ namespace Chess_Console.Chess
 
             Position pos = new Position(0, 0);
 
-            switch(Color)
+            if (Color == Color.White)
             {
-                case Color.Black:
-                    // South.
-                    pos.SetValues(Position.Column, Position.Row + 1);
-                    if (Board.ValidPosition(pos) && CanMoveForward(pos))
+
+                // North.
+                pos.SetValues(Position.Column, Position.Row - 1);
+                if (Board.ValidPosition(pos) && CanMoveForward(pos))
+                {
+                    mat[pos.Column, pos.Row] = true;
+                }
+                // North2.
+                pos.SetValues(Position.Column, Position.Row - 2);
+                if (Board.ValidPosition(pos) && CanMoveForward(pos) && MoveCount == 0)
+                {
+                    mat[pos.Column, pos.Row] = true;
+                }
+                // Northeast.
+                pos.SetValues(Position.Column + 1, Position.Row - 1);
+                if (Board.ValidPosition(pos) && CanMoveDiagonal(pos))
+                {
+                    mat[pos.Column, pos.Row] = true;
+                }
+                // Northwest.
+                pos.SetValues(Position.Column - 1, Position.Row - 1);
+                if (Board.ValidPosition(pos) && CanMoveDiagonal(pos))
+                {
+                    mat[pos.Column, pos.Row] = true;
+                }
+
+                // #SpecialMove En Passant
+                if (Position.Row == 3)
+                {
+                    Position left = new Position(Position.Column - 1, Position.Row);
+                    if (Board.ValidPosition(left) && CanMoveDiagonal(left) && Board.Piece(left) == Match.EnPassant)
                     {
-                        mat[pos.Column, pos.Row] = true;
+                        mat[left.Column, left.Row - 1] = true;
                     }
-                    // En passant.
-                    pos.SetValues(Position.Column, Position.Row + 2);
-                    if (Board.ValidPosition(pos) && CanMoveForward(pos) && MoveCount == 0)
+
+                    Position right = new Position(Position.Column + 1, Position.Row);
+                    if (Board.ValidPosition(right) && CanMoveDiagonal(right) && Board.Piece(right) == Match.EnPassant)
                     {
-                        mat[pos.Column, pos.Row] = true;
+                        mat[right.Column, right.Row - 1] = true;
                     }
-                    // Southeast.
-                    pos.SetValues(Position.Column + 1, Position.Row + 1);
-                    if (Board.ValidPosition(pos) && CanMoveDiagonal(pos))
-                    {
-                        mat[pos.Column, pos.Row] = true;
-                    }
-                    // Southwest.
-                    pos.SetValues(Position.Column - 1, Position.Row + 1);
-                    if (Board.ValidPosition(pos) && CanMoveDiagonal(pos))
-                    {
-                        mat[pos.Column, pos.Row] = true;
-                    }
-                    break;
-                case Color.White:
-                    // North.
-                    pos.SetValues(Position.Column, Position.Row - 1);
-                    if (Board.ValidPosition(pos) && CanMoveForward(pos))
-                    {
-                        mat[pos.Column, pos.Row] = true;
-                    }
-                    // En passant.
-                    pos.SetValues(Position.Column, Position.Row - 2);
-                    if (Board.ValidPosition(pos) && CanMoveForward(pos) && MoveCount == 0)
-                    {
-                        mat[pos.Column, pos.Row] = true;
-                    }
-                    // Northeast.
-                    pos.SetValues(Position.Column + 1, Position.Row - 1);
-                    if (Board.ValidPosition(pos) && CanMoveDiagonal(pos))
-                    {
-                        mat[pos.Column, pos.Row] = true;
-                    }
-                    // Northwest.
-                    pos.SetValues(Position.Column - 1, Position.Row - 1);
-                    if (Board.ValidPosition(pos) && CanMoveDiagonal(pos))
-                    {
-                        mat[pos.Column, pos.Row] = true;
-                    }
-                    break;
+                }
             }
-            
+            else
+            {
+
+                // South.
+                pos.SetValues(Position.Column, Position.Row + 1);
+                if (Board.ValidPosition(pos) && CanMoveForward(pos))
+                {
+                    mat[pos.Column, pos.Row] = true;
+                }
+                // South2.
+                pos.SetValues(Position.Column, Position.Row + 2);
+                if (Board.ValidPosition(pos) && CanMoveForward(pos) && MoveCount == 0)
+                {
+                    mat[pos.Column, pos.Row] = true;
+                }
+                // Southeast.
+                pos.SetValues(Position.Column + 1, Position.Row + 1);
+                if (Board.ValidPosition(pos) && CanMoveDiagonal(pos))
+                {
+                    mat[pos.Column, pos.Row] = true;
+                }
+                // Southwest.
+                pos.SetValues(Position.Column - 1, Position.Row + 1);
+                if (Board.ValidPosition(pos) && CanMoveDiagonal(pos))
+                {
+                    mat[pos.Column, pos.Row] = true;
+                }
+
+                // #SpecialMove En Passant
+                if (Position.Row == 3)
+                {
+                    Position left = new Position(Position.Column - 1, Position.Row);
+                    if (Board.ValidPosition(left) && CanMoveDiagonal(left) && Board.Piece(left) == Match.EnPassant)
+                    {
+                        mat[left.Column, left.Row - 1] = true;
+                    }
+                
+                    Position right = new Position(Position.Column + 1, Position.Row);
+                    if (Board.ValidPosition(right) && CanMoveDiagonal(right) && Board.Piece(right) == Match.EnPassant)
+                    {
+                        mat[right.Column, right.Row + 1] = true;
+                    }
+                }
+
+            }
             return mat;
         }
+
+
     }
 }
